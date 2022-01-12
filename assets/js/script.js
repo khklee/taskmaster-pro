@@ -6,14 +6,31 @@ $(".card .list-group").sortable({
   tolerance: "pointer",
   helper: "clone",
   activate: function(event) {
+    $(this)
+    .addClass("dropover")
     console.log("activate", this);
+    
+    $(".bottom-trash")
+    .addClass("bottom-trash-drag")
   }, 
   deactivate: function(event) {
+    $(this)
+    .removeClass("dropover")
     console.log("deactivate", this);
+
+    $(".bottom-trash")
+    .removeClass("bottom-trash-drag")
   }, 
   over: function(event) {
+    $(this)
+    .addClass("dropover-active")
     console.log("over", event.target);
   },
+  out: function(event) {
+    $(this)
+    .removeClass("dropover-active")
+  },
+
   update: function(event) {
     // array to store the task data in
     var tempArr = [];
@@ -53,12 +70,18 @@ $("#trash").droppable({
   tolerance: "touch", 
   drop: function(event, ui) {
     ui.draggable.remove();
+    $(".bottom-trash")
+    .removeClass(".bottom-trash-active")
     console.log("drop");
   },
   over: function(event, ui) {
+    $(".bottom-trash")
+    .addClass(".bottom-trash-active")
     console.log("over");
   }, 
   out: function(event, ui) {
+    $(".bottom-trash")
+    .removeClass(".bottom-trash-active")
     console.log("out");
   }
 })
@@ -138,7 +161,7 @@ var auditTask = function (taskEl) {
   else if (Math.abs(moment().diff(time, "days")) <= 2) {
     $(taskEl).addClass("list-group-item-warning");
   }
-
+  console.log(taskEl)
 }
 
 $(".list-group").on("blur", "textarea", function() {
@@ -267,6 +290,12 @@ $("#task-form-modal .btn-primary").click(function() {
 $("#modalDueDate").datepicker({
   minDate: 1
 });
+
+setInterval(function() {
+  $(".card .list-group-item").each(function(index, el) {
+    auditTask(el);
+  })
+}, (1000 * 60) * 30);
 
 // remove all tasks
 $("#remove-tasks").on("click", function() {
