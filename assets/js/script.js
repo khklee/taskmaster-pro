@@ -5,18 +5,16 @@ $(".card .list-group").sortable({
   scroll: false, 
   tolerance: "pointer",
   helper: "clone",
-  activate: function(event) {
+  activate: function(event, ui) {
     $(this)
     .addClass("dropover")
-    console.log("activate", this);
     
     $(".bottom-trash")
     .addClass("bottom-trash-drag")
   }, 
-  deactivate: function(event) {
+  deactivate: function(event, ui) {
     $(this)
     .removeClass("dropover")
-    console.log("deactivate", this);
 
     $(".bottom-trash")
     .removeClass("bottom-trash-drag")
@@ -24,14 +22,13 @@ $(".card .list-group").sortable({
   over: function(event) {
     $(this)
     .addClass("dropover-active")
-    console.log("over", event.target);
   },
   out: function(event) {
     $(this)
     .removeClass("dropover-active")
   },
 
-  update: function(event) {
+  update: function() {
     // array to store the task data in
     var tempArr = [];
     // loop over current set of children in sortable list
@@ -52,7 +49,6 @@ $(".card .list-group").sortable({
         date: date
       })
     })
-    console.log(tempArr);
 
     // trim down list's ID to match object property
     var arrName = $(this)
@@ -266,7 +262,7 @@ $("#task-form-modal").on("shown.bs.modal", function() {
 });
 
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function() {
+$("#task-form-modal .btn-save").click(function() {
   // get form values
   var taskText = $("#modalTaskDescription").val();
   var taskDate = $("#modalDueDate").val();
